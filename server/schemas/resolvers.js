@@ -14,28 +14,13 @@ const resolvers = {
     },
   },
 
-  
+  Mutation: {
     // addUser mutation that returns an Auth object
-  
-    mutation AddUser($username: String!, $email: String!, $password: String!) {
-      addUser(username: $username, email: $email, password: $password) {
-        token
-        user {
-          _id
-          username
-          email
-          bookCount
-          savedBooks {
-            bookId
-            authors
-            title
-            description
-            image
-            link
-          }
-        }
-      }
-    }
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
+      const token = signToken(user);
+      return { token, user };
+    },
 
     // login mutation that returns an Auth object
     login: async (parent, { email, password }) => {
